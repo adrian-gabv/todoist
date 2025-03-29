@@ -9,14 +9,15 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      redis:
+        condition: service_started
       db:
         condition: service_healthy
     command: ["java", "-jar", "/app/todoist-api-1.0.0.jar"]
 
   db:
-    image: postgres
-    restart: always
-    container_name: todoist-postgres
+    image: postgres:18.1
+    container_name: postgres_todoist
     environment:
       PGUSER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -28,13 +29,11 @@ services:
       timeout: 5s
       retries: 10
     volumes:
-      - dev-data:/var/lib/postgresql/data
+      - dev-data:/var/lib/postgresql
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8081:8080"
+  redis:
+    image: redis:8.4
+    container_name: redis_todoist
 
 volumes:
   dev-data:
