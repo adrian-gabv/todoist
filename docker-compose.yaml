@@ -1,6 +1,6 @@
 services:
   web:
-    build: .
+    build: ./api
     env_file:
       - .env
     environment:
@@ -13,7 +13,7 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    command: ["java", "-jar", "/app/todoist-api-1.0.0.jar"]
+    command: [ "java", "-jar", "/app/todoist-api-1.0.0.jar" ]
 
   db:
     image: postgres:18.1
@@ -24,7 +24,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}" ]
       interval: 1s
       timeout: 5s
       retries: 10
